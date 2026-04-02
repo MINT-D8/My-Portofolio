@@ -104,6 +104,7 @@
     'Rust':       '#c0544a',
     'Python':     '#4a9fd4',
     'Java':       '#e8a040',
+    'Lua':        '#7b8ec8',
     'JavaScript': '#d4bf40',
     'TypeScript': '#4a85c8',
     'HTML':       '#c86040',
