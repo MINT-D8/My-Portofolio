@@ -55,6 +55,34 @@
     document.querySelectorAll('.reveal-item').forEach(function (el) { el.classList.add('show'); });
   }
 
+  /* ── Discord widget error detection ──────── */
+  (function () {
+    var iframe = document.getElementById('discordWidget');
+    var fallback = document.getElementById('discordFallback');
+    if (!iframe || !fallback) return;
+
+    // If the iframe fails to load (cross-origin errors won't fire onerror,
+    // but we can check if the widget's container ends up blank after a timeout)
+    var widgetTimer = setTimeout(function () {
+      // We can't read cross-origin iframe content, so we rely on the
+      // widget itself. If it loaded OK the iframe will have non-zero scrollHeight
+      // via same-origin check — if not, show fallback.
+      try {
+        // same-origin access attempt — throws for cross-origin (expected)
+        var h = iframe.contentWindow.document.body.scrollHeight;
+        if (h < 10) { fallback.style.opacity = '1'; }
+      } catch (e) {
+        // cross-origin means it loaded fine (Discord's servers responded)
+        // so don't show fallback
+      }
+    }, 6000);
+
+    iframe.addEventListener('error', function () {
+      clearTimeout(widgetTimer);
+      fallback.style.opacity = '1';
+    });
+  }());
+
   /* ══════════════════════════════════════════
      FEATURED WORK — GitHub API
   ════════════════════════════════════════════
